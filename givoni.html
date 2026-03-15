@@ -122,7 +122,7 @@
                     </div>
 
                     <h3 class="text-sm font-medium text-slate-700 mb-2 border-b border-slate-100 pb-1">Estrategias Recomendadas (Zonas Activas)</h3>
-                    <div id="activeZonesList" class="flex flex-col gap-2 max-h-[220px] overflow-y-auto custom-scrollbar pr-2">
+                    <div id="activeZonesList" class="flex flex-col gap-2 max-h-[350px] overflow-y-auto custom-scrollbar pr-2">
                         <!-- Zonas inyectadas por JS -->
                     </div>
                 </div>
@@ -210,47 +210,111 @@
         }
 
         // --------------------------------------------------------
-        // ZONAS DE GIVONI (Límites ajustados en espacio T(°C), W(g/kg))
+        // ZONAS DE GIVONI (Límites corregidos por el usuario)
         // --------------------------------------------------------
         const givoniZones = [
             { id: 1, name: "1. Zona de Confort", color: "rgba(34, 197, 94, 0.5)", stroke: "#16a34a", 
-              poly: [[22, 3.43], [27, 4.64], [27, 12], [25, 13.87], [22, 11.65]], desc: "Condiciones óptimas sin intervención." },
+              poly: [[22, 3.43], [27, 4.64], [27, 12], [25, 13.87], [22, 11.65]], 
+              strategies: [
+                  "Condiciones óptimas de temperatura y humedad relativas.",
+                  "No se necesita ninguna corrección constructiva ni climatización para la obtención del bienestar.",
+                  "El cuerpo humano requiere el mínimo gasto de energía para ajustarse al ambiente."
+              ] },
               
             { id: 2, name: "2. Confort Permisible", color: "rgba(134, 239, 172, 0.4)", stroke: "#4ade80", 
-              poly: [[21.5, 3.3], [28, 4.64], [28, 12.85],[25, 14.87], [21.5, 11.75]], desc: "Confortable con adaptación de vestimenta." },
+              poly: [[21.5, 3.3], [28, 4.64], [28, 12.85],[25, 14.87], [21.5, 11.75]], 
+              strategies: [
+                  "Confortable mediante variaciones relativamente pequeñas en la ropa.",
+                  "Aprovechamiento de los factores de aclimatación de los ocupantes.",
+                  "Tolerable con ligeros ajustes de actividad física."
+              ] },
               
             { id: 3, name: "3. Ganancias Internas", color: "rgba(250, 204, 21, 0.4)", stroke: "#eab308", 
-              poly: [[15, 0], [21.5, 0], [21.5, 15.68], [15, 10.68]], desc: "Calefacción mediante calor de ocupantes y equipos." },
+              poly: [[15, 0], [21.5, 0], [21.5, 15.68], [15, 10.68]], 
+              strategies: [
+                  "Aislamiento térmico eficiente de la envolvente.",
+                  "Aprovechamiento del calor emitido por los ocupantes.",
+                  "Retención del calor generado por los equipos eléctricos y la iluminación interior."
+              ] },
               
             { id: 4, name: "4. Calefacción Solar Pasiva", color: "rgba(251, 146, 60, 0.4)", stroke: "#f97316", 
-              poly: [[8.5, 0], [15, 0], [15, 10.68], [8.5, 6.91]], desc: "Captación solar directa a través de vidrios." },
+              poly: [[8.5, 0], [15, 0], [15, 10.68], [8.5, 6.91]], 
+              strategies: [
+                  "Captación solar directa a través de superficies acristaladas bien orientadas.",
+                  "Uso de muros Trombe, galerías acristaladas o invernaderos adosados.",
+                  "Inercia térmica interior adecuada para acumular el calor diurno y cederlo en la noche."
+              ] },
               
             { id: 5, name: "5. Calefacción Solar Activa", color: "rgba(248, 113, 113, 0.4)", stroke: "#ef4444", 
-              poly: [[2.5, 0], [8.5, 0], [8.5, 6.91], [2.5, 5]], desc: "Sistemas mecánicos de captación solar térmica." },
+              poly: [[2.5, 0], [8.5, 0], [8.5, 6.91], [2.5, 5]], 
+              strategies: [
+                  "Sistemas mecánicos de captación solar térmica mediante colectores.",
+                  "Uso de suelo radiante o radiadores alimentados por energía solar.",
+                  "Distribución activa del calor a lo largo de las estancias."
+              ] },
               
             { id: 7, name: "7. Calefacción Convencional", color: "rgba(225, 29, 72, 0.4)", stroke: "#be123c", 
-              poly: [[-5, 0], [2.5, 0], [2.5, 14], [-5, 14]], desc: "Requiere sistemas de calefacción activa." },
+              poly: [[-5, 0], [2.5, 0], [2.5, 14], [-5, 14]], 
+              strategies: [
+                  "Situación de frío extremo. Aislamiento térmico máximo.",
+                  "Uso ineludible de sistemas de calefacción convencional activos (eléctricos o por combustión)."
+              ] },
               
             { id: 9, name: "9. Alta Masa Térmica", color: "rgba(192, 132, 252, 0.4)", stroke: "#a855f7", 
-              poly: [[21.5, 3.3], [35, 3.3], [35, 10.46], [32, 15.13],[25, 14.87], [28, 12.85], [28, 4.64]], desc: "Materiales pesados para inercia térmica." },
+              poly: [[21.5, 3.3], [35, 3.3], [35, 10.46], [32, 15.13],[25, 14.87], [28, 12.85], [28, 4.64]], 
+              strategies: [
+                  "Refrigeración por masa térmica.",
+                  "Empleo de materiales pesados de alta inercia térmica (piedra, ladrillo macizo, hormigón).",
+                  "Cierre de la edificación durante las horas de máxima radiación para bloquear el calor."
+              ] },
               
             { id: 11, name: "11. Masa Térmica + Ren. Nocturna", color: "rgba(232, 121, 249, 0.4)", stroke: "#d946ef", 
-              poly: [[21.5, 3.3], [44, 3.3], [44, 10.46], [40, 15.13],[25, 14.87], [28, 12.85], [28, 4.64]], desc: "Inercia térmica combinada con ventilación nocturna." },
+              poly: [[21.5, 3.3], [44, 3.3], [44, 10.46], [40, 15.13],[25, 14.87], [28, 12.85], [28, 4.64]], 
+              strategies: [
+                  "Materiales pesados para inercia térmica.",
+                  "Apertura de huecos durante la noche para ventilación cruzada intensiva.",
+                  "El aire nocturno disipa el calor acumulado en las paredes, enfriando la masa térmica para el día siguiente."
+              ] },
               
             { id: 10, name: "10. Enfriamiento Evaporativo", color: "rgba(45, 212, 191, 0.4)", stroke: "#14b8a6", 
-              poly: [[21.5, 3.3], [30, 0], [40, 0], [40, 4.5],[39, 8.75],[25, 14.87], [28, 12.85], [28, 4.64]], desc: "Reducción de temperatura añadiendo humedad." },
+              poly: [[21.5, 3.3], [30, 0], [40, 0], [40, 4.5],[39, 8.75],[25, 14.87], [28, 12.85], [28, 4.64]], 
+              strategies: [
+                  "Reducción de temperatura añadiendo humedad al aire seco.",
+                  "Uso de fuentes interiores, láminas de agua o patios con vegetación tupida.",
+                  "Posible uso de sistemas de enfriamiento evaporativo directo (torres evaporativas)."
+              ] },
               
             { id: 12, name: "12. Ventilación Natural", color: "rgba(59, 130, 246, 0.4)", stroke: "#2563eb", 
-              poly: [[28, 4.64],[31.5, 5.8],[31.5, 12.9], [26, 21], [21.5, 18],[21.5, 11.92], [25, 14.87], [28, 12.76]], desc: "Flujo de aire para aumentar evaporación corporal." },
+              poly: [[28, 4.64],[31.5, 5.8],[31.5, 12.9], [26, 21], [21.5, 18],[21.5, 11.92], [25, 14.87], [28, 12.76]], 
+              strategies: [
+                  "Promover el flujo de aire continuo para aumentar la evaporación del sudor corporal.",
+                  "Uso de ventilación natural cruzada aprovechando vientos dominantes.",
+                  "Aprovechamiento del efecto chimenea o uso de torres de viento."
+              ] },
               
             { id: 14, name: "14. Deshumidificación", color: "rgba(14, 165, 233, 0.4)", stroke: "#0ea5e9", 
-              poly: [[21.5, 12.83],[27.5, 18.45], [32.5, 24.53], [32.5, 30], [21.5, 30]], desc: "Extracción mecánica de humedad." },
+              poly: [[21.5, 12.83],[27.5, 18.45], [32.5, 24.53], [32.5, 30], [21.5, 30]], 
+              strategies: [
+                  "Extracción de humedad. Uso de equipos de deshumidificación convencional.",
+                  "Absorción pasiva mediante recipientes con Sales Desecantes sólidas.",
+                  "Uso de Placas Salinas Absorbentes de funcionamiento alternativo (interior secando el aire, exterior secándose al sol)."
+              ] },
               
             { id: 13, name: "13. Aire Acondicionado", color: "rgba(100, 116, 139, 0.4)", stroke: "#475569", 
-              poly: [[32, 14], [50, 14], [50, 30], [32, 30]], desc: "Climatización mecánica necesaria." },
+              poly: [[32, 14], [50, 14], [50, 30], [32, 30]], 
+              strategies: [
+                  "Las condiciones rebasan la capacidad del diseño pasivo.",
+                  "Climatización mecánica mediante aire acondicionado necesaria.",
+                  "Se recomienda alta eficiencia energética y buen aislamiento para reducir la carga."
+              ] },
               
             { id: 6, name: "6. Humidificación", color: "rgba(217, 119, 6, 0.4)", stroke: "#b45309", 
-              poly: [[-5, 0], [23, 0], [23, 2],[15, 2.73],[10, 2.52], [-5, 0.71]], desc: "Adición de humedad por sequedad extrema." }
+              poly: [[-5, 0], [23, 0], [23, 2],[15, 2.73],[10, 2.52], [-5, 0.71]], 
+              strategies: [
+                  "Adición de humedad por niveles de sequedad extrema perjudiciales para la salud.",
+                  "Incorporación de vaporizadores o sistemas de humidificación mecánica.",
+                  "Presencia de vegetación interior de alta transpiración."
+              ] }
         ];
 
         // --------------------------------------------------------
@@ -304,25 +368,39 @@
             // 3. Curvas de Humedad Relativa (10% a 100%)
             for (let rh = 10; rh <= 100; rh += 10) {
                 let d = '';
+                let labelPoints = []; // Almacenará puntos para posicionar la etiqueta
+                
                 for (let t = minT; t <= maxT; t += 1) {
                     let w = getAbsHumidity(t, rh);
                     if (w > maxW) w = maxW;
                     const x = mapX(t);
                     const y = mapY(w);
                     d += (t === minT ? `M ${x},${y} ` : `L ${x},${y} `);
+                    
+                    if (w < maxW && t < maxT) {
+                        labelPoints.push({t: t, w: w, x: x, y: y});
+                    }
                 }
                 const is100 = rh === 100;
                 html += `<path d="${d}" fill="none" stroke="${is100 ? '#ef4444' : '#94a3b8'}" stroke-width="${is100 ? '2' : '1'}" stroke-dasharray="${is100 ? '0' : '4 4'}"/>`;
                 
-                // Etiqueta de HR al final de la curva
-                let labelT = 40;
-                let labelW = getAbsHumidity(labelT, rh);
-                if(labelW > maxW - 2) {
-                    labelW = maxW - 1;
-                    labelT = unmapX(mapX(labelT)); // aproximar
-                }
-                if(rh !== 100 && labelW < maxW) {
-                    // html += `<text x="${mapX(labelT)}" y="${mapY(labelW)-5}" font-size="9" fill="#94a3b8" transform="rotate(-15, ${mapX(labelT)}, ${mapY(labelW)})">${rh}%</text>`;
+                // Generar Etiqueta de Humedad Relativa y alinearla con la curva
+                if (labelPoints.length > 5) {
+                    // Buscar un punto alrededor de los 35 a 42 grados para colocar la etiqueta
+                    let targetT = 38;
+                    let labelPtIndex = labelPoints.findIndex(p => p.t >= targetT);
+                    if (labelPtIndex === -1) labelPtIndex = labelPoints.length - 3; 
+                    if (labelPtIndex < 0) labelPtIndex = 0;
+                    
+                    let pt = labelPoints[labelPtIndex];
+                    let ptNext = labelPoints[labelPtIndex + 1] || pt;
+                    
+                    // Calcular el ángulo de la recta entre dos puntos cercanos
+                    let dx = ptNext.x - pt.x;
+                    let dy = ptNext.y - pt.y;
+                    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                    
+                    html += `<text x="${pt.x}" y="${pt.y - 4}" font-size="11" font-weight="600" fill="${is100 ? '#ef4444' : '#64748b'}" transform="rotate(${angle}, ${pt.x}, ${pt.y})">${rh}%</text>`;
                 }
             }
 
@@ -412,18 +490,27 @@
                 }
             });
 
-            // Actualizar lista en panel izquierdo
+            // Actualizar lista en panel izquierdo (Con iteración para múltiples estrategias)
             activeZonesList.innerHTML = '';
             if (activeZones.length === 0) {
                 activeZonesList.innerHTML = `<p class="text-sm text-slate-500 italic">Punto fuera de las zonas estratégicas definidas.</p>`;
             } else {
                 activeZones.forEach(z => {
+                    let strategiesHTML = z.strategies.map(s => `
+                        <li class="flex items-start gap-1.5">
+                            <svg class="w-3.5 h-3.5 mt-0.5 shrink-0" style="color:${z.stroke};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                            <span>${s}</span>
+                        </li>
+                    `).join('');
+
                     activeZonesList.innerHTML += `
                         <div class="flex items-start gap-3 p-3 rounded-lg border border-slate-100 bg-white shadow-sm transition-all hover:border-slate-300">
                             <div class="w-4 h-4 rounded-full mt-0.5 shrink-0" style="background-color: ${z.stroke};"></div>
-                            <div>
+                            <div class="w-full">
                                 <h4 class="text-sm font-bold text-slate-800">${z.name}</h4>
-                                <p class="text-xs text-slate-500 mt-1">${z.desc}</p>
+                                <ul class="text-xs text-slate-600 mt-2 space-y-1.5">
+                                    ${strategiesHTML}
+                                </ul>
                             </div>
                         </div>
                     `;
